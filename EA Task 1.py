@@ -39,162 +39,84 @@ pygame.mixer.music.play(-1, 0.0)
 
 # This class represents the bar at the bottom that the player controls
 class Wall(pygame.sprite.Sprite):
-    # Constructor function
     def __init__(self,x,y,width,height, color):
-        # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
-  
-        # Make a blue wall, of the size specified in the parameters
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
-  
-        # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
         self.rect.top = y
         self.rect.left = x
 
-# This creates all the walls in room 1
 def setupRoomOne(all_sprites_list):
-    # Make the walls. (x_pos, y_pos, width, height)
     wall_list=pygame.sprite.RenderPlain()
-     
-    # This is a list of walls. Each is in the form [x, y, width, height]
-    walls = [ [0,0,6,600],
-              [0,0,600,6],
-              [0,600,606,6],
-              [600,0,6,606],
-              [300,0,6,66],
-              [60,60,186,6],
-              [360,60,186,6],
-              [60,120,66,6],
-              [60,120,6,126],
-              [180,120,246,6],
-              [300,120,6,66],
-              [480,120,66,6],
-              [540,120,6,126],
-              [120,180,126,6],
-              [120,180,6,126],
-              [360,180,126,6],
-              [480,180,6,126],
-              [180,240,6,126],
-              [180,360,246,6],
-              [420,240,6,126],
-              [240,240,42,6],
-              [324,240,42,6],
-              [240,240,6,66],
-              [240,300,126,6],
-              [360,240,6,66],
-              [0,300,66,6],
-              [540,300,66,6],
-              [60,360,66,6],
-              [60,360,6,186],
-              [480,360,66,6],
-              [540,360,6,186],
-              [120,420,366,6],
-              [120,420,6,66],
-              [480,420,6,66],
-              [180,480,246,6],
-              [300,480,6,66],
-              [120,540,126,6],
-              [360,540,126,6]
+    walls = [ [0,0,6,600],[0,0,600,6],[0,600,606,6],[600,0,6,606],
+              [300,0,6,66],[60,60,186,6],[360,60,186,6],[60,120,66,6],
+              [60,120,6,126],[180,120,246,6],[300,120,6,66],[480,120,66,6],
+              [540,120,6,126],[120,180,126,6],[120,180,6,126],[360,180,126,6],
+              [480,180,6,126],[180,240,6,126],[180,360,246,6],[420,240,6,126],
+              [240,240,42,6],[324,240,42,6],[240,240,6,66],[240,300,126,6],
+              [360,240,6,66],[0,300,66,6],[540,300,66,6],[60,360,66,6],
+              [60,360,6,186],[480,360,66,6],[540,360,6,186],[120,420,366,6],
+              [120,420,6,66],[480,420,6,66],[180,480,246,6],[300,480,6,66],
+              [120,540,126,6],[360,540,126,6]
             ]
-     
-    # Loop through the list. Create the wall, add it to the list
     for item in walls:
         wall=Wall(item[0],item[1],item[2],item[3],blue)
         wall_list.add(wall)
         all_sprites_list.add(wall)
-         
-    # return our new list
     return wall_list
 
 def setupGate(all_sprites_list):
-      gate = pygame.sprite.RenderPlain()
-      gate.add(Wall(282,242,42,2,white))
-      all_sprites_list.add(gate)
-      return gate
+    gate = pygame.sprite.RenderPlain()
+    gate.add(Wall(282,242,42,2,white))
+    all_sprites_list.add(gate)
+    return gate
 
-# This class represents the ball        
-# It derives from the "Sprite" class in Pygame
 class Block(pygame.sprite.Sprite):
-     
-    # Constructor. Pass in the color of the block, 
-    # and its x and y position
     def __init__(self, color, width, height):
-        # Call the parent class (Sprite) constructor
         pygame.sprite.Sprite.__init__(self) 
- 
-        # Create an image of the block, and fill it with a color.
-        # This could also be an image loaded from the disk.
         self.image = pygame.Surface([width, height])
         self.image.fill(white)
         self.image.set_colorkey(white)
         pygame.draw.ellipse(self.image,color,[0,0,width,height])
- 
-        # Fetch the rectangle object that has the dimensions of the image
-        # image.
-        # Update the position of this object by setting the values 
-        # of rect.x and rect.y
         self.rect = self.image.get_rect() 
 
-# This class represents the bar at the bottom that the player controls
 class Player(pygame.sprite.Sprite):
-  
-    # Set speed vector
     change_x=0
     change_y=0
-  
-    # Constructor function
     def __init__(self,x,y, filename):
-        # Call the parent's constructor
         pygame.sprite.Sprite.__init__(self)
-   
-        # Set height, width
         self.image = pygame.image.load(filename).convert()
-  
-        # Make our top-left corner the passed-in location.
         self.rect = self.image.get_rect()
         self.rect.top = y
         self.rect.left = x
         self.prev_x = x
         self.prev_y = y
 
-    # Clear the speed of the player
     def prevdirection(self):
         self.prev_x = self.change_x
         self.prev_y = self.change_y
 
-    # Change the speed of the player
     def changespeed(self,x,y):
         self.change_x+=x
         self.change_y+=y
           
-    # Find a new position for the player
     def update(self,walls,gate):
-        # Get the old position, in case we need to go back to it
-        
         old_x=self.rect.left
         new_x=old_x+self.change_x
         prev_x=old_x+self.prev_x
         self.rect.left = new_x
-        
         old_y=self.rect.top
         new_y=old_y+self.change_y
         prev_y=old_y+self.prev_y
 
-        # Did this update cause us to hit a wall?
         x_collide = pygame.sprite.spritecollide(self, walls, False)
         if x_collide:
-            # Whoops, hit a wall. Go back to the old position
             self.rect.left=old_x
         else:
-
             self.rect.top = new_y
-
-            # Did this update cause us to hit a wall?
             y_collide = pygame.sprite.spritecollide(self, walls, False)
             if y_collide:
-                # Whoops, hit a wall. Go back to the old position
                 self.rect.top=old_y
 
         if gate != False:
@@ -203,9 +125,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.left=old_x
             self.rect.top=old_y
 
-# Inherits from Player class
 class Ghost(Player):
-    # Change the speed of the ghost
     def changespeed(self,list,ghost,turn,steps,l):
       try:
         z=list[turn][2]
@@ -259,39 +179,25 @@ bl = len(Blinky_directions)-1
 il = len(Inky_directions)-1
 cl = len(Clyde_directions)-1
 
-# Call this function so the Pygame library can initialize itself
 pygame.init()
-  
-# Create an 606x606 sized screen
 screen = pygame.display.set_mode([606, 606])
-
-# Set the title of the window
 pygame.display.set_caption('Pacman')
-
-# Create a surface we can draw on
 background = pygame.Surface(screen.get_size())
-
-# Used for converting color maps and such
 background = background.convert()
-  
-# Fill the screen with a black background
 background.fill(black)
 
 clock = pygame.time.Clock()
-
 pygame.font.init()
 font = pygame.font.Font("freesansbold.ttf", 24)
 
-#default locations for Pacman and monstas
-w = 303-16 #Width
-p_h = (7*60)+19 #Pacman height
-m_h = (4*60)+19 #Monster height
-b_h = (3*60)+19 #Binky height
-i_w = 303-16-32 #Inky width
-c_w = 303+(32-16) #Clyde width
+w = 303-16
+p_h = (7*60)+19
+m_h = (4*60)+19
+b_h = (3*60)+19
+i_w = 303-16-32
+c_w = 303+(32-16)
 
 def startGame():
-
   all_sprites_list = pygame.sprite.RenderPlain()
   block_list = pygame.sprite.RenderPlain()
   monsta_list = pygame.sprite.RenderPlain()
@@ -301,17 +207,13 @@ def startGame():
 
   p_turn = 0
   p_steps = 0
-
   b_turn = 0
   b_steps = 0
-
   i_turn = 0
   i_steps = 0
-
   c_turn = 0
   c_steps = 0
 
-  # Create the player paddle object
   Pacman = Player( w, p_h, "images/Trollman.png" )
   all_sprites_list.add(Pacman)
   pacman_collide.add(Pacman)
@@ -335,41 +237,29 @@ def startGame():
   # ======================================================================
   # TODO #1: Track multiple ghosts of each type
   # ----------------------------------------------------------------------
-  # Right now there's only one of each ghost. To make them duplicate, you
-  # need a way to keep track of multiple copies of each color.
-  #
   # Create four lists, each starting with the existing ghost:
   #   blinky_instances = [Blinky]
   #   ...do the same for pinky, inky, and clyde
-  #
-  # Then put all four lists into one master list called ghost_instances
-  # so you can pass them around easily.
+  # Then put all four lists into one master list called ghost_instances.
   # ======================================================================
 
 
   # ======================================================================
   # TODO #2: Set up a 30-second timer
   # ----------------------------------------------------------------------
-  # Pygame can fire a custom event after a set amount of time. Use:
-  #   pygame.time.set_timer(pygame.USEREVENT+1, ???)
-  #
-  # The second argument is milliseconds. You need 30 seconds = 30,000 ms.
-  # Place this line right before the main game loop starts.
+  # Use pygame.time.set_timer(pygame.USEREVENT+1, ???)
+  # 30 seconds = 30,000 milliseconds.
   # ======================================================================
 
 
-  # Draw the grid
   for row in range(19):
       for column in range(19):
           if (row == 7 or row == 8) and (column == 8 or column == 9 or column == 10):
               continue
           else:
             block = Block(yellow, 4, 4)
-
-            # Set a random location for the block
             block.rect.x = (30*column+6)+26
             block.rect.y = (30*row+6)+26
-
             b_collide = pygame.sprite.spritecollide(block, wall_list, False)
             p_collide = pygame.sprite.spritecollide(block, pacman_collide, False)
             if b_collide:
@@ -377,32 +267,21 @@ def startGame():
             elif p_collide:
               continue
             else:
-              # Add the block to the list of objects
               block_list.add(block)
               all_sprites_list.add(block)
 
   bll = len(block_list)
-
   score = 0
-
   done = False
-
   i = 0
 
   while done == False:
-      # ALL EVENT PROCESSING SHOULD GO BELOW THIS COMMENT
       for event in pygame.event.get():
 
           # ==============================================================
           # TODO #3: Listen for the timer event
           # --------------------------------------------------------------
-          # When pygame.USEREVENT+1 fires (every 30 seconds), call your
-          # duplicate_ghost() function (which you'll write at the bottom
-          # of this file).
-          #
-          # Hint:
-          #   if event.type == pygame.USEREVENT+1:
-          #       duplicate_ghost(???, ???, ???)
+          # When pygame.USEREVENT+1 fires, call duplicate_ghost().
           # ==============================================================
 
           if event.type == pygame.QUIT:
@@ -428,32 +307,18 @@ def startGame():
               if event.key == pygame.K_DOWN:
                   Pacman.changespeed(0,-30)
           
-      # ALL EVENT PROCESSING SHOULD GO ABOVE THIS COMMENT
-   
-      # ALL GAME LOGIC SHOULD GO BELOW THIS COMMENT
       Pacman.update(wall_list,gate)
 
       # ==================================================================
-      # TODO #4: Update ALL ghosts of each color, not just one
+      # TODO #4: Update ALL ghosts of each color using loops
       # ------------------------------------------------------------------
-      # The lines below only update one ghost of each type. Now that
-      # there can be many of each color (after duplication), you need to
-      # loop over your lists and update every single ghost.
-      #
-      # Replace the four lines below with FOUR LOOPS, one per color.
-      # Each loop should call .changespeed() and .update() on every
-      # ghost in that color's list.
-      #
-      # Pattern (do this for all four colors):
-      #   for i in range(len(pinky_instances)):
-      #       returned = pinky_instances[i].changespeed(Pinky_directions, False, p_turn, p_steps, pl)
-      #       p_turn = returned[0]
-      #       p_steps = returned[1]
-      #       pinky_instances[i].changespeed(Pinky_directions, False, p_turn, p_steps, pl)
-      #       pinky_instances[i].update(wall_list, False)
+      # Replace the 4 single-ghost blocks below with 4 LOOPS, one per
+      # color list (pinky_instances, blinky_instances, inky_instances,
+      # clyde_instances). Each loop calls .changespeed() and .update()
+      # on every ghost.
       # ==================================================================
 
-      # DELETE THESE 8 LINES once you've written the loops above ↓
+      # DELETE THESE 4 BLOCKS once you've written the loops above
       returned = Pinky.changespeed(Pinky_directions,False,p_turn,p_steps,pl)
       p_turn = returned[0]
       p_steps = returned[1]
@@ -477,20 +342,12 @@ def startGame():
       c_steps = returned[1]
       Clyde.changespeed(Clyde_directions,False,c_turn,c_steps,cl)
       Clyde.update(wall_list,False)
-      # DELETE UP TO HERE ↑
 
-      # See if the Pacman block has collided with anything.
       blocks_hit_list = pygame.sprite.spritecollide(Pacman, block_list, True)
-       
-      # Check the list of collisions.
       if len(blocks_hit_list) > 0:
           score +=len(blocks_hit_list)
       
-      # ALL GAME LOGIC SHOULD GO ABOVE THIS COMMENT
-   
-      # ALL CODE TO DRAW SHOULD GO BELOW THIS COMMENT
       screen.fill(black)
-        
       wall_list.draw(screen)
       gate.draw(screen)
       all_sprites_list.draw(screen)
@@ -502,9 +359,8 @@ def startGame():
       # ==================================================================
       # TODO #5: Display the current ghost count
       # ------------------------------------------------------------------
-      # Use font.render() to make a text surface showing the number of
-      # ghosts (len(monsta_list)), then blit it to the screen on the
-      # top right (around position [450, 10]).
+      # Use font.render() + screen.blit() to show len(monsta_list) on
+      # the top right around position [450, 10].
       # ==================================================================
 
 
@@ -514,32 +370,21 @@ def startGame():
       monsta_hit_list = pygame.sprite.spritecollide(Pacman, monsta_list, False)
 
       # ==================================================================
-      # TODO #6: Change the collision behavior
+      # TODO #6: Change collision behavior
       # ------------------------------------------------------------------
-      # Right now, if Pacman touches any ghost, the game ends.
-      # Change this so:
-      #   - If Pacman hits ghosts, REMOVE those ghosts from monsta_list
-      #     and all_sprites_list (don't end the game yet).
-      #   - Only show Game Over if len(monsta_list) >= 128
-      #
-      # Hint: monsta_list.remove(monsta_hit_list) removes everything in
-      # monsta_hit_list from monsta_list.
+      # When Pacman hits ghosts, REMOVE them from monsta_list and
+      # all_sprites_list. Only show Game Over if len(monsta_list) >= 128.
       # ==================================================================
 
-      # REPLACE THIS BLOCK with your new collision logic ↓
+      # REPLACE THIS BLOCK with new collision logic
       if monsta_hit_list:
         doNext("Game Over",235,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate)
-      # REPLACE UP TO HERE ↑
 
-      # ALL CODE TO DRAW SHOULD GO ABOVE THIS COMMENT
-      
       pygame.display.flip()
-    
       clock.tick(10)
 
 def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,wall_list,gate):
   while True:
-      # ALL EVENT PROCESSING SHOULD GO BELOW THIS COMMENT
       for event in pygame.event.get():
         if event.type == pygame.QUIT:
           pygame.quit()
@@ -555,13 +400,11 @@ def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,w
             del gate
             startGame()
 
-      #Grey background
       w = pygame.Surface((400,200))
       w.set_alpha(10)
       w.fill((128,128,128))
       screen.blit(w, (100,200))
 
-      #Won or lost
       text1=font.render(message, True, white)
       screen.blit(text1, [left, 233])
 
@@ -571,37 +414,26 @@ def doNext(message,left,all_sprites_list,block_list,monsta_list,pacman_collide,w
       screen.blit(text3, [165, 333])
 
       pygame.display.flip()
-
       clock.tick(10)
 
 # ========================================================================
 # TODO #7: Write the duplicate_ghost function
 # ------------------------------------------------------------------------
-# This function gets called every 30 seconds by your timer.
-# Its job is to DOUBLE the number of each ghost color.
+# Parameters: gi (ghost_instances list), monsta_list, asl (all_sprites_list)
+# 
+# For each of the 4 ghost color lists (gi[0] through gi[3]):
+#   If len(gi[N]) < 32:
+#     Loop that many times, creating a new Ghost each iteration
+#     Add the new ghost to gi[N], monsta_list, and asl
 #
-# Parameters it should accept:
-#   - gi: the ghost_instances list (a list of 4 lists)
-#   - monsta_list: the master sprite group of all ghosts
-#   - asl: the all_sprites_list
-#
-# What it should do:
-#   For each of the 4 ghost color lists (gi[0] through gi[3]):
-#     - If the list has fewer than 32 ghosts:
-#         - Loop that many times (the current count)
-#         - Each time, create a new Ghost using the right image
-#         - Add the new ghost to gi[N], monsta_list, AND asl
-#
-#   After all duplication is done, reset the timer:
-#     pygame.time.set_timer(pygame.USEREVENT+1, 1000 * 30)
-#
-# Ghost image filenames:
+# Image filenames:
 #   gi[0] = Blinkys → "images/Blinky.png"
 #   gi[1] = Pinkys  → "images/Pinky.png"
 #   gi[2] = Inkys   → "images/Inky.png"
 #   gi[3] = Clydes  → "images/Clyde.png"
 #
-# Write the function here:
+# After duplicating, reset the timer:
+#   pygame.time.set_timer(pygame.USEREVENT+1, 1000 * 30)
 # ========================================================================
 
 
