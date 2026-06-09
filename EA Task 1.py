@@ -241,9 +241,19 @@ def startGame():
   #   blinky_instances = [Blinky]
   #   ...do the same for pinky, inky, and clyde
   # Then put all four lists into one master list called ghost_instances.
+  # chris completed task--------
   # ======================================================================
 
+  # Task 1: Create lists to track each ghost type.
 
+  # List of each ghost type
+  blinky_instances = [Blinky]
+  pinky_instances = [Pinky]
+  inky_instances = [Inky]
+  clyde_instances = [Clyde]
+
+  # List of all ghosts
+  ghost_instances = [blinky_instances, pinky_instances, inky_instances, clyde_instances]
   # ======================================================================
   # TODO #2: Set up a 30-second timer
   # ----------------------------------------------------------------------
