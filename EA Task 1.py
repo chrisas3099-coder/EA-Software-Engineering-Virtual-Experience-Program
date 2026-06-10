@@ -260,7 +260,9 @@ def startGame():
   # Use pygame.time.set_timer(pygame.USEREVENT+1, ???)
   # 30 seconds = 30,000 milliseconds.
   # ======================================================================
-
+  
+  # Task 2: Set up a timer to trigger every 30 seconds.
+  pygame.time.set_timer(pygame.USEREVENT + 1, 30000)
 
   for row in range(19):
       for column in range(19):
