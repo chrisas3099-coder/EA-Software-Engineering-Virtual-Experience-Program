@@ -296,7 +296,13 @@ def startGame():
           # When pygame.USEREVENT+1 fires, call duplicate_ghost().
           # ==============================================================
 
+          if event.type == pygame.USEREVENT + 1:
+             duplicate_ghost(ghost_instances, monsta_list, all_sprites_list)
+
+
+
           if event.type == pygame.QUIT:
+              
               done=True
 
           if event.type == pygame.KEYDOWN:
