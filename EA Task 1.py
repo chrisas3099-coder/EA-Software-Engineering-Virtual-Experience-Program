@@ -335,31 +335,37 @@ def startGame():
       # clyde_instances). Each loop calls .changespeed() and .update()
       # on every ghost.
       # ==================================================================
+      for i in range(len(pinky_instances)):
+           returned = pinky_instances[i].changespeed(Pinky_directions,False,p_turn,p_steps,pl)
+           p_turn = returned[0]
+           p_steps = returned[1]
+           pinky_instances[i].changespeed(Pinky_directions,False,p_turn,p_steps,pl)
+           pinky_instances[i].update(wall_list,False)
 
-      # DELETE THESE 4 BLOCKS once you've written the loops above
-      returned = Pinky.changespeed(Pinky_directions,False,p_turn,p_steps,pl)
-      p_turn = returned[0]
-      p_steps = returned[1]
-      Pinky.changespeed(Pinky_directions,False,p_turn,p_steps,pl)
-      Pinky.update(wall_list,False)
+      for i in range(len(blinky_instances)):
+            returned = blinky_instances[i].changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+            b_turn = returned[0]
+            b_steps = returned[1]
+            blinky_instances[i].changespeed(Blinky_directions,False,b_turn,b_steps,bl)
+            blinky_instances[i].update(wall_list,False)
 
-      returned = Blinky.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
-      b_turn = returned[0]
-      b_steps = returned[1]
-      Blinky.changespeed(Blinky_directions,False,b_turn,b_steps,bl)
-      Blinky.update(wall_list,False)
+      for i in range(len(inky_instances)):
+            returned = inky_instances[i].changespeed(Inky_directions,False,i_turn,i_steps,il)
+            i_turn = returned[0]
+            i_steps = returned[1]
+            inky_instances[i].changespeed(Inky_directions,False,i_turn,i_steps,il)
+            inky_instances[i].update(wall_list,False)
 
-      returned = Inky.changespeed(Inky_directions,False,i_turn,i_steps,il)
-      i_turn = returned[0]
-      i_steps = returned[1]
-      Inky.changespeed(Inky_directions,False,i_turn,i_steps,il)
-      Inky.update(wall_list,False)
+      for i in range(len(clyde_instances)):
+            returned = clyde_instances[i].changespeed(Clyde_directions,False,c_turn,c_steps,cl)
+            c_turn = returned[0]
+            c_steps = returned[1]
+            clyde_instances[i].changespeed(Clyde_directions,False,c_turn,c_steps,cl)
+            clyde_instances[i].update(wall_list,False)
 
-      returned = Clyde.changespeed(Clyde_directions,False,c_turn,c_steps,cl)
-      c_turn = returned[0]
-      c_steps = returned[1]
-      Clyde.changespeed(Clyde_directions,False,c_turn,c_steps,cl)
-      Clyde.update(wall_list,False)
+
+
+      
 
       blocks_hit_list = pygame.sprite.spritecollide(Pacman, block_list, True)
       if len(blocks_hit_list) > 0:
